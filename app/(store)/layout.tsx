@@ -3,6 +3,7 @@ import { CartSheet } from "@/components/app/CartSheet";
 import { ChatSheet } from "@/components/app/ChatSheet";
 import { Header } from "@/components/app/Header";
 import { Footer } from "@/components/app/Footer";
+import { FloatingAIButton } from "@/components/app/FloatingAIButton";
 import { Toaster } from "@/components/ui/sonner";
 import { CartStoreProvider } from "@/lib/store/cart-store-provider";
 import { ChatStoreProvider } from "@/lib/store/chat-store-provider";
@@ -21,6 +22,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           </AppShell>
           <CartSheet />
           <ChatSheet />
+          <FloatingAIButton />
           <Toaster position="bottom-right" />
         </ChatStoreProvider>
         <SanityLive />

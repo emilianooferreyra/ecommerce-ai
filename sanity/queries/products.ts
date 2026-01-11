@@ -217,6 +217,37 @@ export const SEARCH_PRODUCTS_QUERY = defineQuery(`*[
 }`);
 
 /**
+ * Autocomplete search - lightweight query for search suggestions
+ * Returns only essential data for fast autocomplete
+ * Limited to 8 results for better UX
+ */
+export const AUTOCOMPLETE_SEARCH_QUERY = defineQuery(`*[
+  _type == "product"
+  && stock > 0
+  && (
+    name match $searchQuery + "*"
+    || description match $searchQuery + "*"
+  )
+] | score(
+  boost(name match $searchQuery + "*", 3),
+  boost(description match $searchQuery + "*", 1)
+) | order(_score desc) [0...8] {
+  _id,
+  name,
+  "slug": slug.current,
+  price,
+  "image": images[0]{
+    asset->{
+      _id,
+      url
+    }
+  },
+  category->{
+    title
+  }
+}`);
+
+/**
  * Filter products - ordered by name (A-Z)
  * Returns up to 4 images for hover preview in product cards
  */

@@ -88,7 +88,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/?category=sofas"
+                  href="/products?category=sofas"
                   className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
                   Sofas
@@ -96,7 +96,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/?category=tables"
+                  href="/products?category=tables"
                   className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
                   Tables
@@ -104,7 +104,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/?category=chairs"
+                  href="/products?category=chairs"
                   className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
                   Chairs
@@ -112,7 +112,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/?category=storage"
+                  href="/products?category=storage"
                   className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
                   Storage
@@ -120,7 +120,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/?category=lighting"
+                  href="/products?category=lighting"
                   className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
                   Lighting
@@ -128,7 +128,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/?category=beds"
+                  href="/products?category=beds"
                   className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
                   Beds

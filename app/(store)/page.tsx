@@ -3,126 +3,82 @@ import { Suspense } from "react";
 import { FeaturedCarousel } from "@/components/app/FeaturedCarousel";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
-import {
-  FEATURED_PRODUCTS_QUERY,
-  FILTER_PRODUCTS_BY_NAME_QUERY,
-  FILTER_PRODUCTS_BY_PRICE_ASC_QUERY,
-  FILTER_PRODUCTS_BY_PRICE_DESC_QUERY,
-  FILTER_PRODUCTS_BY_RELEVANCE_QUERY,
-} from "@/sanity/queries/products";
-import { CategoryTiles } from "@/components/app/CategoryTiles";
+import { FEATURED_PRODUCTS_QUERY } from "@/sanity/queries/products";
 import { FeaturedCarouselSkeleton } from "@/components/app/FeaturedCarouselSkeleton";
-import { ProductSection } from "@/components/app/ProductSection";
+import { CategoryShowcase } from "@/components/app/CategoryShowcase";
+import { EditorialSection } from "@/components/app/EditorialSection";
+import { DualCardSection } from "@/components/app/DualCardSection";
+import { CTASection } from "@/components/app/CTASection";
+import { TopSellersSection } from "@/components/app/TopSellersSection";
+import { GallerySection } from "@/components/app/GallerySection";
 
-interface PageProps {
-  searchParams: Promise<{
-    q?: string;
-    category?: string;
-    color?: string;
-    material?: string;
-    minPrice?: string;
-    maxPrice?: string;
-    sort?: string;
-    inStock?: string;
-  }>;
-}
-
-export default async function Home({ searchParams }: PageProps) {
-  const params = await searchParams;
-
-  const searchQuery = params.q ?? "";
-  const categorySlug = params.category ?? "";
-  const color = params.color ?? "";
-  const material = params.material ?? "";
-  const minPrice = Number(params.minPrice) || 0;
-  const maxPrice = Number(params.maxPrice) || 0;
-  const sort = params.sort ?? "name";
-  const inStock = params.inStock === "true";
-
-  // Select query based on sort parameter
-  const getQuery = () => {
-    // If searching and sort is relevance, use relevance query
-    if (searchQuery && sort === "relevance") {
-      return FILTER_PRODUCTS_BY_RELEVANCE_QUERY;
-    }
-
-    switch (sort) {
-      case "price_asc":
-        return FILTER_PRODUCTS_BY_PRICE_ASC_QUERY;
-      case "price_desc":
-        return FILTER_PRODUCTS_BY_PRICE_DESC_QUERY;
-      case "relevance":
-        return FILTER_PRODUCTS_BY_RELEVANCE_QUERY;
-      default:
-        return FILTER_PRODUCTS_BY_NAME_QUERY;
-    }
-  };
-
-  // Fetch products with filters (server-side via GROQ)
-  const { data: products } = await sanityFetch({
-    query: getQuery(),
-    params: {
-      searchQuery,
-      categorySlug,
-      color,
-      material,
-      minPrice,
-      maxPrice,
-      inStock,
-    },
-  });
-
-  // Fetch categories for filter sidebar
+export default async function Home() {
+  // Fetch categories for showcase
   const { data: categories } = await sanityFetch({
     query: ALL_CATEGORIES_QUERY,
   });
 
-  // Fetch featured products for carousel
+  // Fetch featured products for carousel and top sellers
   const { data: featuredProducts } = await sanityFetch({
     query: FEATURED_PRODUCTS_QUERY,
   });
 
-  console.log(categories);
-  console.log(featuredProducts);
-  console.log(products);
-
   return (
     <div className="">
-      {/* Featured Section Carousel */}
+      {/* 1. Hero Carousel */}
       <Suspense fallback={<FeaturedCarouselSkeleton />}>
         <FeaturedCarousel products={featuredProducts} />
       </Suspense>
-      {/* Page Banner */}
 
-      <div className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Shop {categorySlug ? categorySlug : "All Products"}
-          </h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Premium furniture for your home
-          </p>
-        </div>
+      {/* 2. Shop by Category */}
+      <CategoryShowcase categories={categories} />
 
-        {/* Category Tiles */}
+      {/* 3. Editorial Section - Customize for Connection */}
+      <EditorialSection
+        title="Customize for connection"
+        description="Create spaces that bring people together. Our furniture is designed to foster meaningful moments and lasting memories in your home."
+        imageUrl="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=1200&q=80"
+        ctaText="Explore Living Room"
+        ctaLink="/products?category=sofas"
+        imagePosition="left"
+      />
 
-        <div className="mt-6">
-          <CategoryTiles
-            categories={categories}
-            activeCategory={categorySlug || undefined}
-          />
-        </div>
-      </div>
+      {/* 4. Dual Cards - Fun Function + Personality */}
+      <DualCardSection
+        cards={[
+          {
+            title: 'Put the "fun" in function',
+            description: "Kick your feet up, grab a seat, or use it as a makeshift table — it all feels good!",
+            imageUrl: "https://images.unsplash.com/photo-1567016432779-094069958ea5?w=800&q=80",
+            link: "/products?category=storage",
+            ctaText: "Shop Ottomans & Poufs",
+          },
+          {
+            title: "Shining personality",
+            description: "Lamps are a subtle way to put your stamp on any room.",
+            imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+            link: "/products?category=lighting",
+            ctaText: "Shop Lighting",
+          },
+        ]}
+      />
 
-      {/* Products Section */}
+      {/* 5. Get a Free Design Plan */}
+      <CTASection />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <ProductSection
-          categories={categories}
-          products={products}
-          searchQuery={searchQuery}
-        />
-      </div>
+      {/* 6. Shop Top Sellers */}
+      <TopSellersSection products={featuredProducts} />
+
+      {/* 7. Great Style in the Wild */}
+      <GallerySection
+        title="Great style in the wild"
+        subtitle="See how our customers style their spaces"
+        images={[
+          { url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80", alt: "Customer space 1" },
+          { url: "https://images.unsplash.com/photo-1567016432779-094069958ea5?w=1200&q=80", alt: "Customer space 2" },
+          { url: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=1200&q=80", alt: "Customer space 3" },
+        ]}
+      />
     </div>
   );
 }
